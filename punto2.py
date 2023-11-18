@@ -44,22 +44,37 @@ def kaufmann_malgranger(grafo):
 
     return caminos_hamiltonianos
 
-# Ejemplo de matriz de adyacencia del grafo semi-hamiltoniano
-grafo = [
-    [0, 1, 1, 1],
-    [1, 0, 1, 1],
-    [1, 1, 0, 1],
-    [1, 1, 1, 0]
-]
+def validar_grafo(grafo):
+    n = len(grafo)
+    for i in range(n):
+        if sum(grafo[i]) != n - 1:
+            return False
+    return True
 
-caminos = kaufmann_malgranger(grafo)
+# Solicitar al usuario la matriz de adyacencia
+n = int(input("Ingrese el número de nodos del grafo: "))
+grafo = []
+for i in range(n):
+    fila = list(map(int, input(f"Ingrese la fila {i+1} separada por espacios: ").split()))
+    if len(fila) != n:
+        print("Por favor, ingrese una fila con el número correcto de nodos.")
+        break
+    grafo.append(fila)
 
-# Visualización del grafo
-G = nx.from_numpy_array(np.array(grafo))
-nx.draw(G, with_labels=True, font_weight='bold')
-plt.title('Grafo original')
-plt.show()
+# Validar si es un grafo semi-hamiltoniano
+if not validar_grafo(grafo):
+    print("La matriz ingresada no corresponde a un grafo semi-hamiltoniano.")
+    print("Un grafo semi-hamiltoniano debe tener exactamente (n - 1) conexiones por cada nodo.")
+    print("Por favor, vuelva a ingresar la matriz correctamente.")
+else:
+    caminos = kaufmann_malgranger(grafo)
 
-# Mostrar caminos hamiltonianos por nodo
-for nodo, caminos_nodo in caminos.items():
-    print(f"{nodo}: {' '.join(caminos_nodo)}")
+    # Visualización del grafo
+    G = nx.from_numpy_array(np.array(grafo))
+    nx.draw(G, with_labels=True, font_weight='bold')
+    plt.title('Grafo original')
+    plt.show()
+
+    # Mostrar caminos hamiltonianos por nodo
+    for nodo, caminos_nodo in caminos.items():
+        print(f"{nodo}: {' '.join(caminos_nodo)}")
